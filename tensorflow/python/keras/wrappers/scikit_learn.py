@@ -71,9 +71,11 @@ class BaseWrapper(object):
   `batch_size` or `epochs` as well as the model parameters.
   """
 
-  def __init__(self, build_fn=None, **sk_params):
+  def __init__(self, build_fn=None, callbacks=[], **sk_params):
     self.build_fn = build_fn
+    self.callbacks = callbacks
     self.sk_params = sk_params
+    self.sk_params['callbacks'] = callbacks
     self.check_params(sk_params)
 
   def check_params(self, params):
@@ -115,7 +117,7 @@ class BaseWrapper(object):
         Dictionary of parameter names mapped to their values.
     """
     res = copy.deepcopy(self.sk_params)
-    res.update({'build_fn': self.build_fn})
+    res.update({'build_fn': self.build_fn, 'callbacks': self.callbacks})
     return res
 
   def set_params(self, **params):
